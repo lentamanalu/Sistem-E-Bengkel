@@ -1,12 +1,10 @@
 <?php
 
-use App\Http\Controllers\KendaraanController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KendaraanController;
 
-// Route halaman utama
 Route::get('/', function () {
-    return redirect()->route('kendaraan.index');
+    return redirect('/kendaraan');
 });
 
-// Route resource untuk CRUD kendaraan
 Route::resource('kendaraan', KendaraanController::class);
