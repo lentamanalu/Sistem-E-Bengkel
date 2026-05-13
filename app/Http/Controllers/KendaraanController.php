@@ -2,26 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Kendaraan;
+use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
 {
-    // READ DATA
+    // Tampilkan semua data
     public function index()
     {
         $kendaraans = Kendaraan::all();
-
         return view('kendaraan.index', compact('kendaraans'));
     }
 
-    // FORM TAMBAH DATA
+    // Tampilkan form tambah
     public function create()
     {
         return view('kendaraan.create');
     }
 
-    // SIMPAN DATA
+    // Simpan data baru
     public function store(Request $request)
     {
         $request->validate([
@@ -32,8 +31,36 @@ class KendaraanController extends Controller
         ]);
 
         Kendaraan::create($request->all());
+        return redirect()->route('kendaraan.index')->with('success', 'Data berhasil ditambahkan');
+    }
 
-        return redirect('/kendaraan')
-            ->with('success', 'Data berhasil ditambahkan');
+    // Tampilkan form edit
+    public function edit($id)
+    {
+        $kendaraan = Kendaraan::findOrFail($id);
+        return view('kendaraan.edit', compact('kendaraan'));
+    }
+
+    // Update data
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'plat_nomor' => 'required',
+            'nama_pemilik' => 'required',
+            'merk_kendaraan' => 'required',
+            'keluhan' => 'required',
+        ]);
+
+        $kendaraan = Kendaraan::findOrFail($id);
+        $kendaraan->update($request->all());
+        return redirect()->route('kendaraan.index')->with('success', 'Data berhasil diupdate');
+    }
+
+    // Hapus data
+    public function destroy($id)
+    {
+        $kendaraan = Kendaraan::findOrFail($id);
+        $kendaraan->delete();
+        return redirect()->route('kendaraan.index')->with('success', 'Data berhasil dihapus');
     }
 }
